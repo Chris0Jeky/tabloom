@@ -1,0 +1,49 @@
+{
+  "name": "tabloom",
+  "version": "0.1.0",
+  "description": "An open-source engine for guitar tablature visualisation, plus a learning hub and a capture pipeline that reconstructs tabs from video.",
+  "keywords": [
+    "guitar",
+    "tablature",
+    "tab",
+    "fretboard",
+    "music",
+    "music-education",
+    "ascii-tab",
+    "visualiser",
+    "ocr",
+    "learning"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "bin": {
+    "tabloom-capture": "./tools/capture/cli.mjs"
+  },
+  "files": [
+    "src",
+    "tools",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test",
+    "capture": "node tools/capture/cli.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chris0Jeky/tabloom.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Chris0Jeky/tabloom/issues"
+  },
+  "homepage": "https://github.com/Chris0Jeky/tabloom#readme"
+}

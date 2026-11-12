@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>tabloom — demos</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; padding: 48px 24px;
+    background: #0f0f0f; color: #f2f2f2;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.6;
+  }
+  main { max-width: 720px; margin: 0 auto; }
+  .eyebrow { color: #ffcf4d; text-transform: uppercase; letter-spacing: .12em; font-size: 12px; font-weight: 700; }
+  h1 { font-size: 40px; margin: 8px 0 4px; letter-spacing: -.02em; }
+  .lede { color: #bbb; font-size: 17px; margin: 0 0 32px; }
+  a { color: #8ecbff; }
+  ul { list-style: none; padding: 0; display: grid; gap: 12px; }
+  li a {
+    display: block; padding: 16px 18px; border: 1px solid #333; border-radius: 10px;
+    background: #161616; text-decoration: none; color: inherit; transition: border-color .15s;
+  }
+  li a:hover { border-color: #ffcf4d; }
+  li strong { display: block; font-size: 17px; }
+  li span { color: #999; font-size: 14px; }
+  pre { background: #161616; border: 1px solid #333; border-radius: 10px; padding: 14px; overflow-x: auto; font-size: 13px; }
+  code { font-family: Consolas, Menlo, monospace; }
+  footer { margin-top: 40px; color: #777; font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">tabloom</p>
+  <h1>Demos</h1>
+  <p class="lede">An open-source engine for guitar tablature visualisation and learning.
+  Every page below is a few lines of JavaScript over the same engine.</p>
+
+  <ul>
+    <li><a href="fur-elise.html">
+      <strong>Für Elise</strong>
+      <span>Written as ASCII tab, parsed by the engine. Note names on, bars detected from the source.</span>
+    </a></li>
+    <li><a href="concerning-hobbits.html">
+      <strong>Concerning Hobbits</strong>
+      <span>DADGAD, built from six overlapping video shots — the same shape the capture pipeline emits.</span>
+    </a></li>
+  </ul>
+
+  <h2 style="font-size:20px;margin-top:40px">Reconstruct your own</h2>
+  <pre><code>npm i -g yt-dlp            # optional, for URLs
+npm run capture -- "https://youtube.com/watch?v=..." --tuning dadgad</code></pre>
+  <p class="lede" style="font-size:15px">That writes <code>capture/tab.txt</code> (plain ASCII tab),
+  <code>capture/score.json</code> and <code>capture/report.json</code>. Drop the tab into
+  <code>parseAsciiTab()</code> and you have a playable lesson.</p>
+
+  <footer>
+    <a href="https://github.com/Chris0Jeky/tabloom">github.com/Chris0Jeky/tabloom</a> · MIT
+  </footer>
+</main>
+</body>
+</html>
