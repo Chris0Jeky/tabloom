@@ -34,6 +34,8 @@ The last point is the one that usually does not exist anywhere: see
 
 ## Quick start
 
+Live demos: **https://chris0jeky.github.io/tabloom/**
+
 ```bash
 npm start          # http://localhost:8080 — the demos
 npm test           # 62 tests, no network, no ffmpeg needed
