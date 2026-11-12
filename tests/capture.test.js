@@ -206,6 +206,11 @@ test('a join with no overlap is flagged, not silently glued', () => {
   assert.equal(result.warnings.length, 1);
 });
 
+test('a tool that is not installed reports as missing', async () => {
+  const { hasTool } = await import('../tools/capture/bin.mjs');
+  assert.equal(await hasTool('tabloom-definitely-not-a-real-binary'), false);
+});
+
 test('emitted ASCII tab parses back to the same beats', () => {
   const tuning = resolveTuning('standard');
   const events = [

@@ -30,14 +30,24 @@ export async function execTool(bin, args, options = {}) {
   }
 }
 
-/** Is a binary available? */
+/**
+ * Is a binary available?
+ *
+ * Tools disagree about how to ask for a version: ffmpeg takes `-version`, while
+ * tesseract rejects it and wants `--version`. Trying both is cheaper than
+ * keeping a table of per-tool flags, and an ENOENT cannot be fixed by trying
+ * another flag, so we stop there.
+ */
 export async function hasTool(bin) {
-  try {
-    await execTool(bin, ['-version'], { timeout: 15000 });
-    return true;
-  } catch {
-    return false;
+  for (const flag of ['-version', '--version']) {
+    try {
+      await execTool(bin, [flag], { timeout: 15000 });
+      return true;
+    } catch (error) {
+      if (error instanceof MissingToolError) return false;
+    }
   }
+  return false;
 }
 
 /** ffprobe -> { duration, width, height, fps, codec } */
