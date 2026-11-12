@@ -1,6 +1,8 @@
 node_modules/
 dist/
-capture/
+
+# default output of `npm run capture` (root only — tools/capture is source)
+/capture/
 tmp/
 *.log
 .DS_Store
