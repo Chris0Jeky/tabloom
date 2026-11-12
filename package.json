@@ -36,6 +36,7 @@
   "scripts": {
     "start": "node scripts/serve.mjs",
     "test": "node --test",
+    "smoke": "node scripts/smoke-examples.mjs",
     "capture": "node tools/capture/cli.mjs"
   },
   "repository": {

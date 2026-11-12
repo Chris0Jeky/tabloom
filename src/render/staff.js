@@ -6,7 +6,7 @@
  * transport can move without re-rendering the whole tab.
  */
 
-import { cx, escapeHtml, pitchClassLabel } from '../util/html.js';
+import { escapeHtml, pitchClassLabel } from '../util/html.js';
 import { stringLabel } from '../model/tuning.js';
 
 function renderRow(score, section, sectionIndex, string, options) {
@@ -125,5 +125,3 @@ export function highlightStaff(root, active) {
     if (label) label.classList.add('tl-hot');
   });
 }
-
-export const staffClassName = cx('tl-staff');
