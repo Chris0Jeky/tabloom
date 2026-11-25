@@ -5,7 +5,7 @@ pipeline that reconstructs tabs from video.**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-ffcf4d.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20-3c873a.svg)](package.json)
-[![Tests](https://img.shields.io/badge/tests-62%20passing-7cfc98.svg)](tests)
+[![CI](https://github.com/Chris0Jeky/tabloom/actions/workflows/ci.yml/badge.svg)](https://github.com/Chris0Jeky/tabloom/actions/workflows/ci.yml)
 [![Dependencies](https://img.shields.io/badge/dependencies-0-blue.svg)](package.json)
 
 No build step, no runtime dependencies, no framework. Plain ES modules that run in
@@ -38,7 +38,8 @@ Live demos: **https://chris0jeky.github.io/tabloom/**
 
 ```bash
 npm start          # http://localhost:8080 — the demos
-npm test           # 62 tests, no network, no ffmpeg needed
+npm test           # no network or external binaries needed
+npm run smoke      # check the two example tabs without a browser
 ```
 
 ES modules need `http://`, not `file://`, hence the tiny static server.
@@ -65,21 +66,24 @@ E|--------------|`, { title: 'Example', tuning: 'standard' });
 ### Build a score without writing text
 
 ```js
-import { createScore, createPlayer } from 'tabloom';
+import { createScore, createPlayer } from './src/index.js';
 
 const score = createScore({
   title: 'Concerning Hobbits',
   tuning: 'dadgad',
   sections: [
-    { title: 'Intro', bars: [2, 6], events: [[[2, 3]], [[1, 0]], [[1, 2], [4, 0]]] },
+    { title: 'Intro', bars: [2], events: [[[2, 3]], [[1, 0]], [[1, 2], [4, 0]]] },
   ],
 });
 
 createPlayer(document.querySelector('#app'), { score });
 ```
 
-`events` are beats, `notes` inside a beat are a chord, and `bars` are beat numbers
-after which a bar line falls.
+Each entry in `events` is a beat; multiple `[string, fret]` pairs in one entry
+form a chord. `bars` contains zero-based beat indexes: `[2]` places a bar line
+before the third beat. Both snippets use the checkout's local ES modules. For
+a separate Node project, install the checkout with `npm install ../tabloom`
+(adjust the path), then import from `'tabloom'`.
 
 ---
 
