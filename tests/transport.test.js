@@ -140,3 +140,38 @@ test('an empty transport does nothing', () => {
   assert.equal(transport.playing, false);
   assert.equal(scheduler.state.handler, null);
 });
+
+test('pausing from a play listener does not start the clock or emit a step', () => {
+  const { transport, scheduler } = make();
+  const steps = [];
+  transport.on('play', () => transport.pause());
+  transport.on('step', ({ index }) => steps.push(index));
+  transport.play();
+  scheduler.tick();
+  assert.equal(transport.playing, false);
+  assert.equal(transport.index, -1);
+  assert.equal(scheduler.state.handler, null);
+  assert.deepEqual(steps, []);
+});
+
+test('pausing from the first step leaves that step selected and permits resume', () => {
+  const { transport, scheduler } = make();
+  const off = transport.on('step', () => transport.pause());
+  transport.play();
+  scheduler.tick();
+  assert.equal(transport.playing, false);
+  assert.equal(transport.index, 0);
+  assert.equal(scheduler.state.handler, null);
+  off();
+  transport.play();
+  scheduler.tick();
+  assert.equal(transport.index, 1);
+});
+
+test('destroying from the first step leaves no interval running', () => {
+  const { transport, scheduler } = make();
+  transport.on('step', () => transport.destroy());
+  transport.play();
+  assert.equal(transport.playing, false);
+  assert.equal(scheduler.state.handler, null);
+});
