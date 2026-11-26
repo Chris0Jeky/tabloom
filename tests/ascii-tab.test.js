@@ -108,3 +108,21 @@ test('empty input produces an empty score', () => {
   assert.equal(score.sections.length, 0);
   assert.equal(score.beatCount, 0);
 });
+
+for (const [label, suffix] of [['repeat marker', ' ×2'], ['comment', '  repeat 12 times']]) {
+  test(`whole tabs retain a string carrying a ${label}`, () => {
+    const lines = SIMPLE.map((line, index) => index === 1 ? line + suffix : line);
+    const score = parseAsciiTab(lines.join('\n'), { strict: true });
+    assert.equal(score.sections.length, 1);
+    assert.equal(score.beatCount, 2);
+    assert.deepEqual(score.sections[0].events[0].notes.map(({ string, fret }) => [string, fret]),
+      [[1, 0], [2, 1]]);
+    assert.deepEqual(score.meta.warnings, []);
+  });
+}
+
+test('a Markdown bullet with extra spaces does not become a tab line', () => {
+  const score = parseAsciiTab(['-  practice slowly', '', ...SIMPLE].join('\n'), { strict: true });
+  assert.equal(score.sections.length, 1);
+  assert.equal(score.beatCount, 2);
+});

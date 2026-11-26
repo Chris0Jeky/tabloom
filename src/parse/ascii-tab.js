@@ -35,8 +35,12 @@ const HEADING = /^\s*(?:#{1,6}\s*(.+)|\[(.+?)\])\s*$/;
 function isTabLine(line) {
   if (!line || line.trim().length < 3) return false;
   const body = stripLabel(line);
-  if (!TAB_CHARS.test(body)) return false;
-  return body.includes('-') || body.includes('|');
+  if (TAB_CHARS.test(body)) return body.includes('-') || body.includes('|');
+
+  // Recognise the same annotated rows that parseTabLines can tokenise.
+  // A short bare prefix such as a Markdown bullet is still not a tab line.
+  const tab = stripAnnotation(body);
+  return tab.trim().length >= 3 && TAB_CHARS.test(tab) && (tab.includes('-') || tab.includes('|'));
 }
 
 /** Drop trailing annotations such as `x2` or a comment two spaces away. */
