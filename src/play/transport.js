@@ -93,11 +93,13 @@ export function createTransport(options = {}) {
     if (playing || length === 0) return;
     playing = true;
     emit('play', { index });
+    // Listeners run synchronously and may stop playback before its first tick.
+    if (!playing) return;
     if (index < 0) {
       index = 0;
       emitStep();
     }
-    schedule();
+    if (playing) schedule();
   }
 
   function pause(reason = 'user') {
