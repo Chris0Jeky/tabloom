@@ -256,7 +256,7 @@ async function captureFromImages({ dir, settings }) {
     .filter((file) => /\.(png|jpe?g|bmp|webp)$/i.test(file))
     .sort();
   if (files.length === 0) throw new Error(`No images found in ${dir}`);
-  return files.map((file) => ({ file: join(dir, file), name: file }));
+  return files.map((file) => ({ pngPath: join(dir, file), name: file }));
 }
 
 async function run(argv) {
