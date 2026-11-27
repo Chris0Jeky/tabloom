@@ -124,7 +124,7 @@ back differs from the count written, the run reports
 --strings <n>          strings to expect (default: length of the tuning)
 --tuning <name>        standard | dropD | dadgad | openG | openD | halfStepDown
 --crop x,y,w,h         force the tab region in source pixels
---no-auto-crop         do not detect the band
+--no-auto-crop         skip band detection; segment on the whole frame
 --change <0-255>       mean-change threshold (default 3)
 --change-fraction <p>  cell-fraction threshold in percent (default 0.5)
 --duplicate <0-255>    repeat threshold (default 1.5)

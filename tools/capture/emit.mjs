@@ -62,7 +62,9 @@ export function renderReport(report) {
   } else {
     lines.push(`  shots      ${report.shots.length} image(s)`);
   }
-  if (report.band?.found) {
+  if (report.band?.skipped) {
+    lines.push('  tab band   skipped (--no-auto-crop)');
+  } else if (report.band?.found) {
     lines.push(`  tab band   y ${report.band.top}-${report.band.bottom} (confidence ${report.band.confidence.toFixed(2)})`);
   } else {
     lines.push(`  tab band   not detected${report.band?.reason ? ` (${report.band.reason})` : ''}`);
