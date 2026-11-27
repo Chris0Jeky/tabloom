@@ -152,22 +152,23 @@ async function analyseVideo({ file, outDir, settings, args }) {
     end: args.end ? Number(args.end) : undefined,
   });
 
-  // Pass 1: find the tab band from a sample of frames.
-  const bandTracker = new BandTracker({ stringCount: settings.strings, sampleEvery: 5 });
-  let frames = 0;
-  await readGrayFrames(rawFile, settings.width, height, settings.fps, (buffer) => {
-    frames += 1;
-    bandTracker.push(buffer, settings.width, height);
-  });
-  const band = bandTracker.resolve();
+  // Unless disabled, find the band in a first pass; segmentation uses it to ignore the background.
+  let band = { found: false, hits: 0, skipped: true, reason: '--no-auto-crop' };
+  if (!args.noAutoCrop) {
+    const bandTracker = new BandTracker({ stringCount: settings.strings, sampleEvery: 5 });
+    await readGrayFrames(rawFile, settings.width, height, settings.fps, (buffer) => {
+      bandTracker.push(buffer, settings.width, height);
+    });
+    band = bandTracker.resolve();
+  }
 
-  // Pass 2: segment on the band only, so a scroll inside the tab is not diluted
-  // by an unchanging background. If no band was found, fall back to the frame.
   const region = band.found ? { top: band.top, bottom: band.bottom } : null;
   if (region) {
     log(`  tab band y ${region.top}-${region.bottom}: segmenting on the tab only`);
   } else {
-    log('  no tab band found: segmenting on the whole frame');
+    log(band.skipped
+      ? '  tab band detection skipped: segmenting on the whole frame'
+      : '  no tab band found: segmenting on the whole frame');
   }
 
   const segmenter = new Segmenter({
@@ -179,7 +180,9 @@ async function analyseVideo({ file, outDir, settings, args }) {
     region,
   });
 
+  let frames = 0;
   await readGrayFrames(rawFile, settings.width, height, settings.fps, (buffer, index, time) => {
+    frames += 1;
     segmenter.push(buffer, settings.width, height, time);
     if (index > 0 && index % 120 === 0) {
       log(`    analysed ${index} frame(s)`);
@@ -203,7 +206,7 @@ async function captureFrames({ file, outDir, shots, band, video, analysis, setti
   const userCrop = parseCrop(args.crop);
   let crop = userCrop;
 
-  if (!crop && args.autoCrop !== false && band.found) {
+  if (!crop && band.found) {
     const scale = video.height / analysis.height;
     const top = Math.max(0, Math.round(band.top * scale));
     const bottom = Math.min(video.height, Math.round(band.bottom * scale));
@@ -312,7 +315,7 @@ async function run(argv) {
     if (shots.length === 0) throw new Error('No usable shots found: is this a static or blank video?');
     if (analysis.band.found) {
       log(`  tab band found in ${analysis.band.hits} sampled frame(s), confidence ${analysis.band.confidence.toFixed(2)}`);
-    } else {
+    } else if (!analysis.band.skipped) {
       warnings.push(`tab band not detected (${analysis.band.reason}); using the full frame`);
     }
 
